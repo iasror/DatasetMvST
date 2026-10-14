@@ -7,7 +7,7 @@ Code and anonymized skeleton data for the paper:
 ## Repository structure
 
 ```
-├── checkpoint/             # trained MVST+CVA models (see below)
+├── checkpoints/             # trained MVST+CVA models (see below)
 ├── Dataset_AQA_CSV/        # anonymized skeleton data
 │   ├── backhand/           # backhand, trained
 │   ├── backhandNewbie/     # backhand, novice
