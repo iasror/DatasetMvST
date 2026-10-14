@@ -7,13 +7,14 @@ Code and anonymized skeleton data for the paper:
 ## Repository structure
 
 ```
+├── checkpoint/             # trained MVST+CVA models (see below)
 ├── Dataset_AQA_CSV/        # anonymized skeleton data
 │   ├── backhand/           # backhand, trained
 │   ├── backhandNewbie/     # backhand, novice
 │   ├── forehand/           # forehand, trained
 │   └── forehandNewbie/     # forehand, novice
 ├── *.py                    # training and evaluation scripts
-├── results/                # per-run results (CSV)
+├── *.csv                   # per-run results (one row per seed and fold)
 └── requirements.txt
 ```
 
