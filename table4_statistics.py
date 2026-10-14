@@ -42,7 +42,7 @@ def holm(pvals):
     return adj
 
 
-# The CSV in the repository uses ";" as separator and "," as decimal mark
+
 df = pd.read_csv(CSV, sep=None, engine="python", encoding="utf-8-sig")
 for c in ["accuracy", "final_epoch_accuracy", "f1_score", "final_epoch_f1"]:
     if not pd.api.types.is_numeric_dtype(df[c]):
