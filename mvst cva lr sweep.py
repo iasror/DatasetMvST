@@ -12,6 +12,7 @@
 # ===   - resume per (lr, seed): generator DataLoader dipakai berurutan lintas   ===
 # ===     fold dalam satu seed, jadi seed yang belum lengkap diulang dari fold 1 ===
 # ==============================================================================
+# python "mvst cva lr sweep.py" --ckpt
 
 import torch
 import torch.nn as nn
@@ -281,7 +282,8 @@ def evaluate(model, dataloader, criterion, device, return_predictions=False):
 
 def run(root_dir="Dataset_AQA_CSV", learning_rates=(5e-5, 1e-4, 2e-4, 5e-4),
         seeds=(42, 7, 123, 777, 2024), num_epochs=40, batch_size=8,
-        out_prefix="mvst_cva_lr_sweep"):
+        out_prefix="mvst_cva_lr_sweep",
+        save_ckpt_lrs=(1e-4,), ckpt_dir="checkpoints"):
 
     NUM_FRAMES, NUM_LANDMARKS, NUM_CLASSES = 150, 33, 4
     D_MODEL, NHEAD, NUM_ENCODER_LAYERS = 128, 4, 2
@@ -371,6 +373,24 @@ def run(root_dir="Dataset_AQA_CSV", learning_rates=(5e-5, 1e-4, 2e-4, 5e-4),
                 print(f"-> Best: Acc={best_val_acc:.4f} F1={best_val_f1:.4f} Ep={best_epoch} | "
                       f"Final: Acc={final_acc:.4f} F1={final_f1:.4f}")
 
+                # Simpan model epoch terakhir (endpoint utama). torch.save tidak memakai
+                # RNG, sehingga tidak mengubah hasil training. state_dict juga memuat
+                # projection head CVA, yang tidak dipakai saat inferensi.
+                if any(abs(float(lr) - float(x)) < 1e-12 for x in save_ckpt_lrs):
+                    Path(ckpt_dir).mkdir(exist_ok=True)
+                    torch.save({
+                        "state_dict": model.state_dict(),
+                        "lr": lr, "seed": seed, "fold_seed": seed + fold, "fold": fold,
+                        "val_subjects": f"{val_trained} & {val_novice}",
+                        "epoch": num_epochs,
+                        "final_epoch_accuracy": final_acc, "final_epoch_f1": final_f1,
+                        "config": {"num_landmarks": NUM_LANDMARKS, "num_frames": NUM_FRAMES,
+                                   "num_classes": NUM_CLASSES, "d_model": D_MODEL,
+                                   "nhead": NHEAD, "num_encoder_layers": NUM_ENCODER_LAYERS,
+                                   "dim_feedforward": DIM_FEEDFORWARD, "dropout": DROPOUT,
+                                   "view_mode": VIEW_MODE, "cva_proj_dim": CVA_PROJ_DIM},
+                    }, Path(ckpt_dir) / f"mvst_cva_lr{lr:g}_seed{seed}_fold{fold}.pt")
+
                 all_results.append({
                     "model": "mvst_cva", "lr": lr, "seed": seed,
                     "fold_seed": seed + fold, "fold": fold,
@@ -418,4 +438,9 @@ def run(root_dir="Dataset_AQA_CSV", learning_rates=(5e-5, 1e-4, 2e-4, 5e-4),
 
 
 if __name__ == "__main__":
-    run()
+    import sys
+    if "--ckpt" in sys.argv:
+        # Hanya lr = 1e-4 (Tabel 3): melatih ulang 20 model dan menyimpan checkpoint
+        run(learning_rates=(1e-4,), out_prefix="mvst_cva_ckpt")
+    else:
+        run()
