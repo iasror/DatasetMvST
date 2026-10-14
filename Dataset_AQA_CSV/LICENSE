@@ -1,0 +1,27 @@
+MVST Tennis Skeleton Dataset
+Copyright (c) 2026 Ibnu Asror, Maman Abdurohman, Bayu Erfianto, Achmad Rizal
+
+This dataset is licensed under the Creative Commons Attribution-NonCommercial
+4.0 International License (CC BY-NC 4.0).
+
+You are free to:
+  - Share: copy and redistribute the material in any medium or format.
+  - Adapt: remix, transform, and build upon the material.
+
+Under the following terms:
+  - Attribution: You must give appropriate credit by citing the paper below,
+    provide a link to the license, and indicate if changes were made.
+  - NonCommercial: You may not use the material for commercial purposes.
+
+Full license text: https://creativecommons.org/licenses/by-nc/4.0/legalcode
+
+Note on participant privacy:
+  - The data contain only anonymized skeleton coordinates. No video, images,
+    or personal identities are included.
+  - Users are kindly requested not to attempt to re-identify any participant.
+
+Please cite:
+  I. Asror, M. Abdurohman, B. Erfianto, and A. Rizal, "MVST: A Multi-View
+  Spatio-Temporal Transformer for Skill-Aware Tennis Stroke Recognition from
+  Skeleton Sequences", International Journal of Intelligent Engineering and
+  Systems (under review).
